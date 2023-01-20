@@ -33,7 +33,7 @@ export function Menu({ onAddToCart, products }: MenuProps) {
         keyExtractor={product => product._id}
         renderItem={({ item: product }) => (
           <ProductContainer onPress={() => handleOpenModal(product)}>
-            <ProductImage source={{ uri: `http://192.168.0.7:3001/uploads/${product?.imagePath}` }} />
+            <ProductImage source={{ uri: `http://192.168.0.6:3001/uploads/${product?.imagePath}` }} />
             <ProductDetails>
               <Text weight='600'>{product.name}</Text>
               <Text size={14} color="#666" style={{ marginVertical: 8 }}>{product.description}</Text>
