@@ -9,15 +9,18 @@ import { MinusCircle } from '../Icons/MinusCircle';
 import { Button } from '../Button';
 import { Product } from '../../types/Product';
 import { OrderConfirmedModal } from '../OrderConfirmedModal';
+import { api } from '../../utils/api';
+import { baseURI } from '../../utils/baseURI';
 
 interface CartProps {
   cartItems: CartItem[];
   onAdd: (product: Product) => void;
   onDecrement: (product: Product) => void;
   onConfirmOrder: () => void;
+  selectedTable: string;
 }
 
-export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProps) {
+export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder, selectedTable }: CartProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,7 +28,19 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProp
     return acc + cartItem.quantity * cartItem.product.price;
   }, 0);
 
-  function handleConfirmOrder() {
+  async function handleConfirmOrder() {
+    setIsLoading(true);
+    const payload = {
+      table: selectedTable,
+      products: cartItems.map((cartItem)=> ({
+        product: cartItem.product._id,
+        quantity: cartItem.quantity,
+      })),
+    };
+
+    await api.post('/orders', payload);
+
+    setIsLoading(false);
     setIsModalVisible(true);
   }
 
@@ -45,7 +60,7 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProp
           renderItem={({ item: cartItem }) => (
             <Item>
               <ProductContainer>
-                <Image source={{ uri: `http://192.168.0.6:3001/uploads/${cartItem.product.imagePath}` }} />
+                <Image source={{ uri: `http://${baseURI}:3001/uploads/${cartItem.product.imagePath}` }} />
 
                 <QuantityContainer>
                   <Text size={14} color="#666">{cartItem.quantity}x</Text>

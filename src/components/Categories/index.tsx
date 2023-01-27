@@ -7,14 +7,16 @@ import { CategoryContainer, Icon } from './styles';
 
 interface CategoriesProps {
   categories: Category[];
+  onSelecteCategory: (categoryId: string) => Promise<void>;
 }
 
-export function Categories({ categories }: CategoriesProps) {
+export function Categories({ categories, onSelecteCategory }: CategoriesProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>('');
 
   function handleSelectCategory(categoryId: string) {
     const category = selectedCategory === categoryId ? '' : categoryId;
 
+    onSelecteCategory(category);
     setSelectedCategory(category);
   }
 
